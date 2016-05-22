@@ -30,14 +30,18 @@ class Substation(object):
     '''
         Classe que define objetos abstratos do tipo Substation (Subestação).
     '''
-    def __init__(self, nome, tensao_primario, tensao_secundario, potencia, impedancia):
+    def __init__(self, nome, n_transformadores, tensao_primario, tensao_secundario, potencia, r_pos, i_pos, r_zero, i_zero):
         self.nome = nome
+        self.n_transformadores = n_transformadores
         self.tensao_primario = tensao_primario
         self.tensao_secundario = tensao_secundario
         self.potencia = potencia
-        self.impedancia = impedancia
+        self.r_pos = r_pos
+        self.i_pos = i_pos
+        self.r_zero = r_zero
+        self.i_zero = i_zero
         self.alimentadores = []
-        
+
 
 class BusBarSection(object):
     '''
@@ -102,7 +106,7 @@ class Terminal(object):
     def delete_from_list(self):
         '''
             Apaga o terminal do nó conectivo ao qual ele estava associado,
-            removendo-o das listas de terminais desse nó. 
+            removendo-o das listas de terminais desse nó.
         '''
         if self.no != None:
             self.no.backup_list = self.no.terminal_list
@@ -110,5 +114,3 @@ class Terminal(object):
             print "remova!"
             if len(self.no.terminal_list) < 2:
                 self.parent.scene().lista_no_conectivo.remove(self.no)
-
-        
