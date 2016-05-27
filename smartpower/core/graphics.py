@@ -1,4 +1,4 @@
-cd #!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from PySide import QtCore, QtGui, QtSvg
 import math
@@ -2006,11 +2006,47 @@ class SceneWidget(QtGui.QGraphicsScene):
                         else:
                             item.text.setPlainText(dialog.nomeLineEdit.text())
                             item.substation.nome = dialog.nomeLineEdit.text()
+
+                        if dialog.numTransformadoresLineEdit.text() == "":
+                            pass
+                        else:
+                            item.substation.n_transformadores = dialog.numTransformadoresLineEdit.text()
+
                         if dialog.tpLineEdit.text() == "":
                             pass
                         else:
-                            item.substation.tensao_primario = \
-                                dialog.tpLineEdit.text()
+                            item.substation.tensao_primario = dialog.tpLineEdit.text()
+
+                        if dialog.tsLineEdit.text() == "":
+                            pass
+                        else:
+                            item.substation.tensao_secundario = dialog.tsLineEdit.text()
+
+                        if dialog.potLineEdit.text() == "":
+                            pass
+                        else:
+                            item.substation.potencia = dialog.potLineEdit.text()
+
+                        if dialog.r_posLineEdit.text() == "":
+                            pass
+                        else:
+                            item.substation.r_pos = dialog.r_posLineEdit.text()
+
+                        if dialog.i_posLineEdit.text() == "":
+                            pass
+                        else:
+                            item.substation.i_pos = dialog.i_posLineEdit.text()
+
+                        if dialog.r_zeroLineEdit == "":
+                            pass
+                        else:
+                            item.substation.r_zero = dialog.r_zeroLineEdit.text()
+
+                        if dialog.i_zeroLineEdit == "":
+                            pass
+                        else:
+                            item.substation.i_zero = dialog.i_zeroLineEdit.text()
+
                     else:
                         return dialog.dialog.result()
 
