@@ -440,7 +440,7 @@ class Node(QtGui.QGraphicsRectItem):
             self.text.setPos(self.mapFromItem(self.text, 0, rect.height()))
             # Cria o objeto barra que contém os dados elétricos do elemento
             # barra.
-            self.barra = BusBarSection("Identificador")
+            self.barra = BusBarSection("Identificador", 0, 0.0, 0.0, 0.0, 0.0)
             # Define uma lista vazia com os terminais que possivelmente a barra
             # terá
             self.terminals = []
@@ -1990,10 +1990,31 @@ class SceneWidget(QtGui.QGraphicsScene):
                         else:
                             item.text.setPlainText(dialog.nomeLineEdit.text())
                             item.barra.nome = dialog.nomeLineEdit.text()
+
                         if dialog.fasesLineEdit.text() == "":
                             pass
                         else:
                             item.barra.phases = dialog.fasesLineEdit.text()
+
+                        if dialog.r_posLineEdit.text() == "":
+                            pass
+                        else:
+                            item.barra.r_pos = dialog.r_posLineEdit.text()
+
+                        if dialog.i_posLineEdit.text() == "":
+                            pass
+                        else:
+                            item.barra.i_pos = dialog.i_posLineEdit.text()
+
+                        if dialog.r_zeroLineEdit.text() == "":
+                            pass
+                        else:
+                            item.barra.r_zero = dialog.r_zeroLineEdit.text()
+
+                        if dialog.i_zeroLineEdit.text() == "":
+                            pass
+                        else:
+                            item.barra.i_zero = dialog.i_zeroLineEdit.text()
                     else:
                         return dialog.dialog.result()
 

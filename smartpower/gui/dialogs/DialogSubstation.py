@@ -21,16 +21,16 @@ class SubstationDialog(QtGui.QWidget):
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(380, 338)
+        Dialog.resize(380, 370)
         #Define o tamanho da caixa dialogo
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(0, 298, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(0, 330, 341, 32))
         #Define o tamanho do layout dos botões do dialogo
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.formLayoutWidget = QtGui.QWidget(Dialog)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 350, 298))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 350, 330))
         #Define a localização do layout das propriedades (coordenada x do ponto, coordenada y do ponto, dimensão em x, dimensão em y)
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtGui.QFormLayout(self.formLayoutWidget)

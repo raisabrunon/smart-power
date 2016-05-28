@@ -47,9 +47,13 @@ class BusBarSection(object):
     '''
         Classe que define objetos abstratos do tipo BusBarSection (Barramento ou barra).
     '''
-    def __init__(self,nome=None, phases = None):
+    def __init__(self, nome, phases, r_pos, i_pos, r_zero, i_zero):
         self.nome = nome
         self.phases = phases
+        self.r_pos = r_pos
+        self.i_pos = i_pos
+        self.r_zero = r_zero
+        self.i_zero = i_zero
 
 
 class Condutor(object):

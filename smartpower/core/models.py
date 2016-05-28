@@ -114,16 +114,16 @@ class DiagramToXML(ElementTree.Element):
                     potencia.text = str(item.substation.potencia)
 
                     resistencia_positiva = ElementTree.Element('resistencia_positiva')
-                    resistencia_positiva = str(item.substation.r_pos)
+                    resistencia_positiva.text = str(item.substation.r_pos)
 
                     reatancia_positiva = ElementTree.Element('reatancia_positiva')
-                    reatancia_positiva = str(item.substation.i_pos)
+                    reatancia_positiva.text = str(item.substation.i_pos)
 
                     resistencia_zero = ElementTree.Element('resistencia_zero')
-                    resistencia_zero = str(item.substation.r_zero)
+                    resistencia_zero.text = str(item.substation.r_zero)
 
                     reatancia_zero = ElementTree.Element('reatancia_zero')
-                    reatancia_zero = str(item.substation.i_zero)
+                    reatancia_zero.text = str(item.substation.i_zero)
 
                     CE.append(identificador)
                     CE.append(tensao_p)
@@ -143,8 +143,24 @@ class DiagramToXML(ElementTree.Element):
                     fases = ElementTree.Element('fases')
                     fases.text = str(item.barra.phases)
 
+                    resistencia_positiva = ElementTree.Element('resistencia_positiva')
+                    resistencia_positiva.text = str(item.barra.r_pos)
+
+                    reatancia_positiva = ElementTree.Element('reatancia_positiva')
+                    reatancia_positiva.text = str(item.barra.i_pos)
+
+                    resistencia_zero = ElementTree.Element('resistencia_zero')
+                    resistencia_zero.text = str(item.barra.r_zero)
+
+                    reatancia_zero = ElementTree.Element('reatancia_zero')
+                    reatancia_zero.text = str(item.barra.i_zero)
+
                     CE.append(identificador)
                     CE.append(fases)
+                    CE.append(resistencia_positiva)
+                    CE.append(reatancia_positiva)
+                    CE.append(resistencia_zero)
+                    CE.append(reatancia_zero)
 
                 self.append(CE)
         for item in lista:
