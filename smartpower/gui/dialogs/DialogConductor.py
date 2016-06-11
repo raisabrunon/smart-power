@@ -16,6 +16,7 @@ class ConductorDialog(QtGui.QWidget):
         super(ConductorDialog, self).__init__()
         self.dialog = QtGui.QDialog(self)
         self.item = item
+        self.scene = self.item.scene()
         self.setupUi(self.dialog)
         self.dialog.exec_()
 
@@ -85,10 +86,40 @@ class ConductorDialog(QtGui.QWidget):
         self.ampacidadeLineEdit.setPlaceholderText(str(self.item.linha.ampacidade))
         self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.ampacidadeLineEdit)
 
+        # Definição da COMBOBOX
+        self.padraoLabel = QtGui.QLabel(self.formLayoutWidget)
+        self.padraoLabel.setObjectName("padraoLabel")
+        self.formLayout.setWidget(6, QtGui.QFormLayout.LabelRole, self.padraoLabel)
+        self.padraoLineEdit = QtGui.QComboBox(self.formLayoutWidget)
+        self.padraoLineEdit.setObjectName("padraoEdit")
+        self.padraoLineEdit.addItems(self.scene.dict_condutor.keys())
+        self.padraoLineEdit.insertItem(0,"Custom")
+        index = self.padraoLineEdit.findText(self.item.padrao_condutor)
+        print(self.item.padrao_condutor)
+        print(index)
+        self.padraoLineEdit.setCurrentIndex(index)
+        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.padraoLineEdit)
+        self.padraoLineEdit.currentIndexChanged.connect(self.update_values)
+
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def update_values(self, index):
+
+        if index == 0:
+            return
+
+        self.resistenciaLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Resistencia positiva']))
+        self.reatanciaLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Reatancia positiva']))
+        self.resistenciaZeroLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Resistencia zero']))
+        self.reatanciaZeroLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Reatancia zero']))
+        self.ampacidadeLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Ampacidade']))
+
+
+    def custom(self):
+        self.testeLineEdit.setCurrentIndex(0)
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Condutor - Propriedades", None, QtGui.QApplication.UnicodeUTF8))
@@ -98,6 +129,8 @@ class ConductorDialog(QtGui.QWidget):
         self.reatanciaLabel.setText(QtGui.QApplication.translate("Dialog", "Reatancia", None, QtGui.QApplication.UnicodeUTF8))
         self.reatanciaZeroLabel.setText(QtGui.QApplication.translate("Dialog", "Reatancia Zero", None, QtGui.QApplication.UnicodeUTF8))
         self.ampacidadeLabel.setText(QtGui.QApplication.translate("Dialog", "Ampacidade", None, QtGui.QApplication.UnicodeUTF8))
+        self.padraoLabel.setText(QtGui.QApplication.translate("Dialog", "Padrão:", None, QtGui.QApplication.UnicodeUTF8))
+
 
     if __name__ == '__main__':
         app = QtGui.QApplication(sys.argv)

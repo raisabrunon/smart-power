@@ -180,9 +180,34 @@ class DiagramToXML(ElementTree.Element):
                 comprimento = ElementTree.Element('comprimento')
                 comprimento.text = str(item.linha.comprimento)
 
+                resistencia = ElementTree.Element('resistencia')
+                resistencia.text = str(item.linha.resistencia)
+
+                resistencia_zero = ElementTree.Element('resistencia_zero')
+                resistencia_zero.text = str(item.linha.resistencia_zero)
+
+                reatancia = ElementTree.Element('reatancia')
+                reatancia.text = str(item.linha.reatancia)
+
+                reatancia_zero = ElementTree.Element('reatancia_zero')
+                reatancia_zero.text = str(item.linha.reatancia_zero)
+
+                ampacidade = ElementTree.Element('ampacidade')
+                ampacidade.text = str(item.linha.ampacidade)
+
+                padrao = ElementTree.Element('padrao')
+                padrao.text = str(item.padrao_condutor)
+
                 edge.append(comprimento)
                 edge.append(w1)
                 edge.append(w2)
+                edge.append(resistencia)
+                edge.append(resistencia_zero)
+                edge.append(reatancia)
+                edge.append(reatancia_zero)
+                edge.append(ampacidade)
+                edge.append(padrao)
+
                 self.append(edge)
 
     def write_xml(self, path):
@@ -312,9 +337,28 @@ class XMLToDiagram(object):
                         w1 = item
                     elif isinstance(item, Node) and item.id == int(child.find('w2').text):
                         w2 = item
+
                 edge = Edge(w1, w2, self.scene.myLineMenu)
-                comprimento = str(child.find('comprimento').text)
-                edge.linha.comprimento = comprimento
+
+                edge.linha.comprimento = child.find('comprimento').text
+                edge.linha.resistencia = child.find('resistencia').text
+                edge.linha.resistencia_zero = child.find('resistencia_zero').text
+                edge.linha.reatancia = child.find('reatancia').text
+                edge.linha.reatancia_zero = child.find('reatancia_zero').text
+                edge.linha.ampacidade = child.find('ampacidade').text
+
+                resistencia = child.find('resistencia').text
+                resistencia_zero = child.find('resistencia_zero').text
+                reatancia = child.find('reatancia').text
+                reatancia_zero = child.find('reatancia_zero').text
+                ampacidade = child.find('ampacidade').text
+                padrao = child.find('padrao').text
+
+                print(padrao)
+                
+                self.scene.create_dict_condutor(resistencia, reatancia, resistencia_zero,  reatancia_zero, ampacidade, padrao)
+
+                #edge.linha.comprimento = comprimento
                 self.scene.addItem(edge)
                 edge.update_position()
                 print "opa"
@@ -603,6 +647,16 @@ class CimXML(object):
         f.write(self.cim_xml.prettify())
         f.close()
 
+    def check_errors(self):
+        noc_to_remove = []
+        for noc in self.lista_no_conectivo:
+            if noc.terminal_list[0]==noc.terminal_list[1]:
+                noc_to_remove.append(noc)
+                print "Erro encontrado! Solucionando..."
+        for no in noc_to_remove:
+            noc.remove(no)
+
+
 
     def montar_rede(self, scene):
         '''
@@ -610,36 +664,38 @@ class CimXML(object):
             de acordo com a função deles na rede, para então montar a rede seguindo o padrão CIM.
         '''
 
+        # Definir número de terminais de acordo com o tipo de elemento
+
         for item in self.scene.items():
             if isinstance(item, Node):
+                # 1º Caso: elemento é um religador ou uma SE
                 if item.myItemType != Node.NoConectivo and item.myItemType != Node.Barra and item.myItemType != Node.NoDeCarga:
                     item.terminal1 = Terminal(item)
                     item.terminal2 = Terminal(item)
                     self.lista_terminais.append(item.terminal1)
                     self.lista_terminais.append(item.terminal2)
-
+                # 2º Caso: elemento é uma barra ou um nó de carga
                 if item.myItemType == Node.Barra or item.myItemType == Node.NoDeCarga:
                     for i in range(len(item.edges)):
                         terminal = Terminal(item)
                         item.terminals.append(terminal)
                         self.lista_terminais.append(terminal)
+
+            # 3º Caso: elemento é um condutor
             if isinstance(item, Edge):
                 item.terminal1 = Terminal(item)
                 item.terminal2 = Terminal(item)
                 self.lista_terminais.append(item.terminal1)
                 self.lista_terminais.append(item.terminal1)
 
-
+        # Definição dos nós conectivos
         for edge in self.scene.items():
             if isinstance(edge, Edge):
                 no_conectivo_1 = NoConect([])
                 no_conectivo_2 = NoConect([])
-                print "start"
 
                 # Ligação do Nó Conectivo relativo à ligação do terminal de w1 com o terminal 1 da linha - CONVENÇÃO!
                 if edge.w1.myItemType != Node.NoConectivo and edge.w1.myItemType != Node.Barra and edge.w2.myItemType != Node.Barra and edge.w1.myItemType != Node.NoDeCarga:
-
-                    print "w1 is not NoC"
                     if edge.w1.terminal1.connected:
                         if edge.w1.terminal2.connected:
                             pass
@@ -804,6 +860,7 @@ class CimXML(object):
                             self.lista_no_conectivo.append(no_conectivo)
                             break
 
+                self.check_errors()
                 print "end"
 
 
@@ -819,5 +876,7 @@ class CimXML(object):
                 else:
                     print "terminal: " + str(id(no2)) + "\n" + "objeto: " + str(no2.parent.text.toPlainText()) + "\n" + "Posição: " + str(no2.parent.scenePos()) + "\n"
             print "=====================================================================\n\n"
+
+        raw_input("Press enter to complete conversion.")
 
         print "--------------------------------------------------------------------------"

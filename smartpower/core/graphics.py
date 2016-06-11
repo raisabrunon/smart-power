@@ -16,8 +16,6 @@ from smartpower.gui.dialogs.avisoReligador import AvisoReligador
 
 from smartpower.core import Bridge
 
-from smartpower.calc import xml2objects
-
 lista_no_conectivo = []
 
 class DashedLine(QtGui.QGraphicsLineItem):
@@ -95,6 +93,7 @@ class Edge(QtGui.QGraphicsLineItem):
         # condutor. Os dados são iniciados nulos e depois serão setados por
         # meio dos menus. Ver classe "Condutor" em elementos.py.
         self.linha = Condutor(0, 0, 0, 0, 0, 0)
+        self.padrao_condutor = 'Custom' # Atributo do padrão do condutor. 
 
         # Análise: se um item (w1 ou w2) que a linha conecta for uma barra,
         # seta-se um atributo desta barra, denominado "bar_busy", como True,
@@ -995,8 +994,8 @@ class Node(QtGui.QGraphicsRectItem):
                 new_pos_y = centena_y + 80
         # Ajuste de posição devido à diferença de geometria.
         if self.myItemType == Node.NoDeCarga:
-            new_pos_x += 6
-            new_pos_y += 6
+            new_pos_x += 3
+            new_pos_y -= 3.5
         return QtCore.QPointF(new_pos_x, new_pos_y)
 
     def contextMenuEvent(self, event):
@@ -1040,6 +1039,7 @@ class SceneWidget(QtGui.QGraphicsScene):
         self.selectRect = None
         self.text_item = None
         self.dict_prop = {}
+        self.dict_condutor = {}             #Dicionário de condutores
         self.lista_no_conectivo = []
         # Definição da geometria inicial da cena
         self.setSceneRect(0, 0, 1600, 1600)
@@ -1058,11 +1058,30 @@ class SceneWidget(QtGui.QGraphicsScene):
         self.undoStack = QtGui.QUndoStack()
         # Cria os dicionários de padrões dos relés (ver create_dict_recloser em
         # SceneWidget
-        self.custom_dict = {'Corrente Nominal': 0,
-                            'Capacidade de Interrupcao': 0, 'Sequencia': 0}
+        #self.custom_dict = {'Corrente Nominal': 0,
+        #                   'Capacidade de Interrupcao': 0, 'Sequencia': 0}
         self.create_dict_recloser(100, 4, 4, 'ABB')
         self.create_dict_recloser(150, 5, 3, 'SEL')
         self.create_dict_recloser(200, 6, 3, 'BOSCH')
+
+        #Cria os dicionário com padrões de condutor
+        self.create_dict_condutor(1.5835, 0.49717, 1.76134, 2.02142, 98, 'CAA 4R')
+        self.create_dict_condutor(25.54, 25.7576, 1.1095, 3.0863, 200, 'MRT')
+        self.create_dict_condutor(1.308, 0.48022, 1.48584, 2.00447, 212, 'Cobre 16R')
+
+        #Cabo das redes adaptada, pici, induscon, nestor, lucas
+        self.create_dict_condutor(0.2391, 0.37895, 0.41693, 1.55591, 301, 'CAA 266R')
+
+        #Cabos para a rede 16 barras IEEE
+        self.create_dict_condutor(0.39675, 0.529, 0.16, 1.1, 266, 'cabo1/16')
+        self.create_dict_condutor(0.4232, 0.5819, 0.17, 0.15, 266, 'cabo2/16')
+        self.create_dict_condutor(0.4761, 0.9522, 0.42, 1.35, 266, 'cabo3/16')
+        self.create_dict_condutor(0.2116, 0.2116, 0.21, 0.7, 266, 'cabo4/16')
+        self.create_dict_condutor(0.5819, 0.5819, 0.21, 0.7, 266, 'cabo5/16')
+        self.create_dict_condutor(0.4761, 0.6348, 0.21, 0.7, 266, 'cabo6/16')
+
+
+        
         print "CENA CRIADA"
 
     def create_dict_recloser(self, corrente, capacidade, num_rel, padrao):
@@ -1073,6 +1092,17 @@ class SceneWidget(QtGui.QGraphicsScene):
         prop = {'Corrente Nominal': corrente,
                 'Capacidade de Interrupcao': capacidade, 'Sequencia': num_rel}
         self.dict_prop[padrao] = prop
+
+    def create_dict_condutor(self, r_pos, i_pos, r_zero, i_zero, ampacidade, padrao):
+        '''
+            Teste
+        '''
+        propriedades = {'Resistencia positiva': r_pos,
+                        'Reatancia positiva': i_pos,
+                        'Resistencia zero': r_zero,
+                        'Reatancia zero': i_zero,
+                        'Ampacidade': ampacidade}
+        self.dict_condutor[padrao] = propriedades
 
     def mousePressEvent(self, mouse_event):
         '''
@@ -2102,6 +2132,7 @@ class SceneWidget(QtGui.QGraphicsScene):
                 print str(item.linha.id)
                 dialog = ConductorDialog(item)
                 if dialog.dialog.result() == 1:
+                        item.padrao_condutor = unicode(dialog.padraoLineEdit.currentText())
                         if dialog.comprimentoLineEdit.text() == "":
                             pass
                         else:
