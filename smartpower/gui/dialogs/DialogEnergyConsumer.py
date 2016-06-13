@@ -100,9 +100,9 @@ class EnergyConsumerDialog(QtGui.QWidget):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "No de Carga - Propriedades", None, QtGui.QApplication.UnicodeUTF8))
-        self.identificaOLabel.setText(QtGui.QApplication.translate("Dialog", "Identificação", None, QtGui.QApplication.UnicodeUTF8))
-        self.potNciaAtivaLabel.setText(QtGui.QApplication.translate("Dialog", "Potência Ativa", None, QtGui.QApplication.UnicodeUTF8))
-        self.potNciaReativaLabel.setText(QtGui.QApplication.translate("Dialog", "Potência Reativa", None, QtGui.QApplication.UnicodeUTF8))
+        self.identificaOLabel.setText(QtGui.QApplication.translate("Dialog", "Identificação:", None, QtGui.QApplication.UnicodeUTF8))
+        self.potNciaAtivaLabel.setText(QtGui.QApplication.translate("Dialog", "Potência Ativa (kW):", None, QtGui.QApplication.UnicodeUTF8))
+        self.potNciaReativaLabel.setText(QtGui.QApplication.translate("Dialog", "Potência Reativa (kVAr):", None, QtGui.QApplication.UnicodeUTF8))
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

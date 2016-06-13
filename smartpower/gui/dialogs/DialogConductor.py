@@ -22,16 +22,16 @@ class ConductorDialog(QtGui.QWidget):
 
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(380, 210)
+        Dialog.resize(380, 310)
 
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(0, 170, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(0, 260, 341, 32))
 
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.formLayoutWidget = QtGui.QWidget(Dialog)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 350, 150))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 350, 240))
 
         self.formLayoutWidget.setObjectName("formLayoutWidget")
         self.formLayout = QtGui.QFormLayout(self.formLayoutWidget)
@@ -43,7 +43,7 @@ class ConductorDialog(QtGui.QWidget):
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.comprimentoLabel)
         self.comprimentoLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.comprimentoLineEdit.setObjectName("comprimentoLineEdit")
-        self.comprimentoLineEdit.setPlaceholderText(str(self.item.linha.comprimento))
+        self.comprimentoLineEdit.setText(str(self.item.linha.comprimento))
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.comprimentoLineEdit)
 
         self.resistenciaLabel = QtGui.QLabel(self.formLayoutWidget)
@@ -51,40 +51,45 @@ class ConductorDialog(QtGui.QWidget):
         self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.resistenciaLabel)
         self.resistenciaLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.resistenciaLineEdit.setObjectName("resistenciaLineEdit")
-        self.resistenciaLineEdit.setPlaceholderText(str(self.item.linha.resistencia))
+        self.resistenciaLineEdit.setText(str(self.item.linha.resistencia))
         self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.resistenciaLineEdit)
+        self.resistenciaLineEdit.textEdited.connect(self.custom)
         
         self.resistenciaZeroLabel = QtGui.QLabel(self.formLayoutWidget)
         self.resistenciaZeroLabel.setObjectName("resistenciaZeroLabel")
         self.formLayout.setWidget(2, QtGui.QFormLayout.LabelRole, self.resistenciaZeroLabel)
         self.resistenciaZeroLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.resistenciaZeroLineEdit.setObjectName("resistenciaZeroLineEdit")
-        self.resistenciaZeroLineEdit.setPlaceholderText(str(self.item.linha.resistencia_zero))
+        self.resistenciaZeroLineEdit.setText(str(self.item.linha.resistencia_zero))
         self.formLayout.setWidget(2, QtGui.QFormLayout.FieldRole, self.resistenciaZeroLineEdit)
+        self.resistenciaZeroLineEdit.textEdited.connect(self.custom)
         
         self.reatanciaLabel = QtGui.QLabel(self.formLayoutWidget)
         self.reatanciaLabel.setObjectName("reatanciaLabel")
         self.formLayout.setWidget(3, QtGui.QFormLayout.LabelRole, self.reatanciaLabel)
         self.reatanciaLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.reatanciaLineEdit.setObjectName("reatanciaLineEdit")
-        self.reatanciaLineEdit.setPlaceholderText(str(self.item.linha.reatancia))
+        self.reatanciaLineEdit.setText(str(self.item.linha.reatancia))
         self.formLayout.setWidget(3, QtGui.QFormLayout.FieldRole, self.reatanciaLineEdit)
+        self.reatanciaLineEdit.textEdited.connect(self.custom)
         
         self.reatanciaZeroLabel = QtGui.QLabel(self.formLayoutWidget)
         self.reatanciaZeroLabel.setObjectName("reatanciaZeroLabel")
         self.formLayout.setWidget(4, QtGui.QFormLayout.LabelRole, self.reatanciaZeroLabel)
         self.reatanciaZeroLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.reatanciaZeroLineEdit.setObjectName("reatanciaZeroLineEdit")
-        self.reatanciaZeroLineEdit.setPlaceholderText(str(self.item.linha.reatancia_zero))
+        self.reatanciaZeroLineEdit.setText(str(self.item.linha.reatancia_zero))
         self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.reatanciaZeroLineEdit)
+        self.reatanciaZeroLineEdit.textEdited.connect(self.custom)
         
         self.ampacidadeLabel = QtGui.QLabel(self.formLayoutWidget)
         self.ampacidadeLabel.setObjectName("ampacidadeLabel")
         self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.ampacidadeLabel)
         self.ampacidadeLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
         self.ampacidadeLineEdit.setObjectName("ampacidadeLineEdit")
-        self.ampacidadeLineEdit.setPlaceholderText(str(self.item.linha.ampacidade))
+        self.ampacidadeLineEdit.setText(str(self.item.linha.ampacidade))
         self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.ampacidadeLineEdit)
+        self.ampacidadeLineEdit.textEdited.connect(self.custom)
 
         # Definição da COMBOBOX
         self.padraoLabel = QtGui.QLabel(self.formLayoutWidget)
@@ -106,8 +111,28 @@ class ConductorDialog(QtGui.QWidget):
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
-    def update_values(self, index):
+        self.en_dis_button()
+        if self.comprimentoLineEdit.text() != "0":
+            if self.resistenciaLineEdit.text() != "0":
+                if self.resistenciaZeroLineEdit.text() != "0":
+                    if self.reatanciaLineEdit.text() != "0":
+                        if self.reatanciaZeroLineEdit.text() != "0":
+                            if self.ampacidadeLineEdit.text() != "0":
+                                self.buttonBox.buttons()[0].setFocus()
+                            else:
+                                self.ampacidadeLineEdit.setFocus()
+                        else:
+                            self.reatanciaZeroLineEdit.setFocus()
+                    else:
+                        self.reatanciaLineEdit.setFocus()
+                else:
+                    self.resistenciaZeroLineEdit.setFocus()
+            else:
+                self.resistenciaLineEdit.setFocus()
+        else:
+            self.comprimentoLineEdit.setFocus()
 
+    def update_values(self, index):
         if index == 0:
             return
 
@@ -117,18 +142,27 @@ class ConductorDialog(QtGui.QWidget):
         self.reatanciaZeroLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Reatancia zero']))
         self.ampacidadeLineEdit.setText(str(self.scene.dict_condutor[self.padraoLineEdit.currentText()]['Ampacidade']))
 
-
     def custom(self):
-        self.testeLineEdit.setCurrentIndex(0)
+        self.padraoLineEdit.setCurrentIndex(0)
+
+    def en_dis_button(self):
+
+        if self.comprimentoLineEdit.text() == "":
+            print self.buttonBox.buttons()
+            self.buttonBox.buttons()[0].setEnabled(False)
+        else:
+            self.buttonBox.buttons()[0].setEnabled(True)
+        if self.comprimentoLineEdit.placeholderText() != "":
+            self.buttonBox.buttons()[0].setEnabled(True)
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Condutor - Propriedades", None, QtGui.QApplication.UnicodeUTF8))
-        self.comprimentoLabel.setText(QtGui.QApplication.translate("Dialog", "Comprimento", None, QtGui.QApplication.UnicodeUTF8))
-        self.resistenciaLabel.setText(QtGui.QApplication.translate("Dialog", "Resistencia", None, QtGui.QApplication.UnicodeUTF8))
-        self.resistenciaZeroLabel.setText(QtGui.QApplication.translate("Dialog", "Resistencia Zero", None, QtGui.QApplication.UnicodeUTF8))
-        self.reatanciaLabel.setText(QtGui.QApplication.translate("Dialog", "Reatancia", None, QtGui.QApplication.UnicodeUTF8))
-        self.reatanciaZeroLabel.setText(QtGui.QApplication.translate("Dialog", "Reatancia Zero", None, QtGui.QApplication.UnicodeUTF8))
-        self.ampacidadeLabel.setText(QtGui.QApplication.translate("Dialog", "Ampacidade", None, QtGui.QApplication.UnicodeUTF8))
+        self.comprimentoLabel.setText(QtGui.QApplication.translate("Dialog", "Comprimento (km):", None, QtGui.QApplication.UnicodeUTF8))
+        self.resistenciaLabel.setText(QtGui.QApplication.translate("Dialog", "Resistência:", None, QtGui.QApplication.UnicodeUTF8))
+        self.resistenciaZeroLabel.setText(QtGui.QApplication.translate("Dialog", "Resistência Zero:", None, QtGui.QApplication.UnicodeUTF8))
+        self.reatanciaLabel.setText(QtGui.QApplication.translate("Dialog", "Reatância:", None, QtGui.QApplication.UnicodeUTF8))
+        self.reatanciaZeroLabel.setText(QtGui.QApplication.translate("Dialog", "Reatância Zero:", None, QtGui.QApplication.UnicodeUTF8))
+        self.ampacidadeLabel.setText(QtGui.QApplication.translate("Dialog", "Ampacidade:", None, QtGui.QApplication.UnicodeUTF8))
         self.padraoLabel.setText(QtGui.QApplication.translate("Dialog", "Padrão:", None, QtGui.QApplication.UnicodeUTF8))
 
 

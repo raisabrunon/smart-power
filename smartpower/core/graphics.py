@@ -435,11 +435,11 @@ class Node(QtGui.QGraphicsRectItem):
             rect = QtCore.QRectF(0, 0, 10.0, 100.0)
             # Define e ajusta a posição do label do item gráfico. Começa com
             # um texto vazio.
-            self.text = Text('Barra', self, self.scene())
+            self.text = Text('', self, self.scene())
             self.text.setPos(self.mapFromItem(self.text, 0, rect.height()))
             # Cria o objeto barra que contém os dados elétricos do elemento
             # barra.
-            self.barra = BusBarSection("Identificador", 0, 0.0, 0.0, 0.0, 0.0)
+            self.barra = BusBarSection("", 0, 0.0, 0.0, 0.0, 0.0)
             # Define uma lista vazia com os terminais que possivelmente a barra
             # terá
             self.terminals = []

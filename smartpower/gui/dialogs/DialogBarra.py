@@ -20,91 +20,137 @@ class BarraDialog(QtGui.QWidget):
 
     def setupUi(self, Propriedades):
         Propriedades.setObjectName("Propriedades")
-        Propriedades.resize(380, 271)
+        Propriedades.resize(451, 231)
         #Define o tamanho da caixa dialogo
+
         self.buttonBox = QtGui.QDialogButtonBox(Propriedades)
-        self.buttonBox.setGeometry(QtCore.QRect(0, 231, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(0, 181, 341, 32))
         #Define o tamanho do layout dos botões do dialogo
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.formLayoutWidget = QtGui.QWidget(Propriedades)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(10, 10, 350, 231))
-        #Define a localização do layout das propriedades (coordenada x do ponto, coordenada y do ponto, dimensão em x, dimensão em y)
-        self.formLayoutWidget.setObjectName("formLayoutWidget")
-        self.formLayout = QtGui.QFormLayout(self.formLayoutWidget)
-        self.formLayout.setContentsMargins(0, 0, 0, 0)
-        self.formLayout.setObjectName("formLayout")
+        
+        self.gridLayoutWidget = QtGui.QWidget(Propriedades)
+        self.gridLayoutWidget.setGeometry(QtCore.QRect(5, 5, 431, 181))
+
+        self.grid = QtGui.QGridLayout(self.gridLayoutWidget)
+        self.grid.setSpacing(5)
 
         #definição da propriedade NOME
-        self.nomeLabel = QtGui.QLabel(self.formLayoutWidget)
+        self.nomeLabel = QtGui.QLabel()
         self.nomeLabel.setObjectName("nomeLabel")
-        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.nomeLabel)
-        self.nomeLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        self.grid.addWidget(self.nomeLabel, 0, 0)
+
+        self.nomeLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.nomeLineEdit.setObjectName("nomeLineEdit")
         self.nomeLineEdit.setPlaceholderText(str(self.item.barra.nome))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.nomeLineEdit)
-        self.fasesLabel = QtGui.QLabel(self.formLayoutWidget)
-
-        #definição da propriedade FASES
+        self.nomeLineEdit.textChanged.connect(self.en_dis_button)
+        self.grid.addWidget(self.nomeLineEdit, 0, 1, 1, 4)
+        
+        # #definição da propriedade FASES
+        self.fasesLabel = QtGui.QLabel(self.gridLayoutWidget)
         self.fasesLabel.setObjectName("fasesLabel")
-        self.formLayout.setWidget(1, QtGui.QFormLayout.LabelRole, self.fasesLabel)
-        self.fasesLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        self.grid.addWidget(self.fasesLabel, 1, 0,)
+
+        self.fasesLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.fasesLineEdit.setObjectName("fasesLineEdit")
-        self.fasesLineEdit.setPlaceholderText(str(self.item.barra.phases))
-        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.fasesLineEdit)
+        self.fasesLineEdit.setText(str(self.item.barra.phases))
+        self.grid.addWidget(self.fasesLineEdit, 1, 1, 1, 4)
 
-        #definição da propriedade IMPEDANCIA SEQUENCIA POSITIVA
-        self.r_posLabel = QtGui.QLabel(self.formLayoutWidget)
-        self.r_posLabel.setObjectName("r_posLabel")
-        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.r_posLabel)
-        self.r_posLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        # #definição da propriedade IMPEDANCIA SEQUENCIA POSITIVA
+        self.impedanciaPositiva = QtGui.QLabel(self.gridLayoutWidget)
+        self.impedanciaPositiva.setObjectName("impedanciaPositiva")
+        self.grid.addWidget(self.impedanciaPositiva, 2, 0)
+
+        self.r_posLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.r_posLineEdit.setObjectName("r_posLineEdit")
-        self.r_posLineEdit.setPlaceholderText(str(self.item.barra.r_pos))
-        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.r_posLineEdit)
+        self.r_posLineEdit.setText(str(self.item.barra.r_pos))
+        self.grid.addWidget(self.r_posLineEdit, 2, 1)
 
-        self.i_posLabel = QtGui.QLabel(self.formLayoutWidget)
-        self.i_posLabel.setObjectName("i_posLabel")
-        self.i_posLabel.setAlignment(QtCore.Qt.AlignRight)
-        self.formLayout.setWidget(6, QtGui.QFormLayout.LabelRole, self.i_posLabel)
-        self.i_posLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        self.sinalMaisLabel = QtGui.QLabel(self.gridLayoutWidget)
+        self.sinalMaisLabel.setObjectName("sinalMaisLabel")
+        self.grid.addWidget(self.sinalMaisLabel, 2, 2)
+
+        self.i_posLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.i_posLineEdit.setObjectName("i_posLineEdit")
-        self.i_posLineEdit.setPlaceholderText(str(self.item.barra.i_pos))
-        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.i_posLineEdit)
+        self.i_posLineEdit.setText(str(self.item.barra.i_pos))
+        self.grid.addWidget(self.i_posLineEdit, 2, 3)
 
-        #definição da propriedade IMPEDANCIA SEQUENCIA ZERO
-        self.r_zeroLabel = QtGui.QLabel(self.formLayoutWidget)
-        self.r_zeroLabel.setObjectName("r_zeroLabel")
-        self.formLayout.setWidget(7, QtGui.QFormLayout.LabelRole, self.r_zeroLabel)
-        self.r_zeroLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        self.jLabel = QtGui.QLabel(self.gridLayoutWidget)
+        self.jLabel.setObjectName("jLabel")
+        self.grid.addWidget(self.jLabel, 2, 4)
+
+        # #definição da propriedade IMPEDANCIA SEQUENCIA ZERO
+        self.impedanciaZero = QtGui.QLabel(self.gridLayoutWidget)
+        self.impedanciaZero.setObjectName("impedanciaZero")
+        self.grid.addWidget(self.impedanciaZero, 3, 0)
+
+        self.r_zeroLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.r_zeroLineEdit.setObjectName("r_zeroLineEdit")
-        self.r_zeroLineEdit.setPlaceholderText(str(self.item.barra.r_zero))
-        self.formLayout.setWidget(7, QtGui.QFormLayout.FieldRole, self.r_zeroLineEdit)
+        self.r_zeroLineEdit.setText(str(self.item.barra.r_zero))
+        self.grid.addWidget(self.r_zeroLineEdit, 3, 1)
 
-        self.i_zeroLabel = QtGui.QLabel(self.formLayoutWidget)
-        self.i_zeroLabel.setObjectName("i_zeroLabel")
-        self.i_zeroLabel.setAlignment(QtCore.Qt.AlignRight)
-        self.formLayout.setWidget(8, QtGui.QFormLayout.LabelRole, self.i_zeroLabel)
-        self.i_zeroLineEdit = QtGui.QLineEdit(self.formLayoutWidget)
+        self.sinalMais2Label = QtGui.QLabel(self.gridLayoutWidget)
+        self.sinalMais2Label.setObjectName("sinalMaisLabel2")
+        self.grid.addWidget(self.sinalMais2Label, 3, 2)
+
+        self.i_zeroLineEdit = QtGui.QLineEdit(self.gridLayoutWidget)
         self.i_zeroLineEdit.setObjectName("i_zeroLineEdit")
-        self.i_zeroLineEdit.setPlaceholderText(str(self.item.barra.i_zero))
-        self.formLayout.setWidget(8, QtGui.QFormLayout.FieldRole, self.i_zeroLineEdit)
+        self.i_zeroLineEdit.setText(str(self.item.barra.i_zero))
+        self.grid.addWidget(self.i_zeroLineEdit, 3 , 3)
+
+        self.j2Label = QtGui.QLabel(self.gridLayoutWidget)
+        self.j2Label.setObjectName("j2Label")
+        self.grid.addWidget(self.j2Label, 3, 4)
 
         self.retranslateUi(Propriedades)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Propriedades.accept)
         QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Propriedades.reject)
         QtCore.QMetaObject.connectSlotsByName(Propriedades)
 
+        self.en_dis_button()
+        if self.nomeLineEdit.placeholderText() != "":
+            if self.fasesLineEdit.text() != "0":
+                if self.r_posLineEdit.text() != "0.0":
+                    if self.i_posLineEdit.text() != "0.0":
+                        if self.r_zeroLineEdit.text() != "0.0":
+                            if self.i_zeroLineEdit.text() != "0.0":
+                                self.buttonBox.buttons()[0].setFocus()
+                            else:
+                                self.i_zeroLineEdit.setFocus()
+                        else:
+                            self.r_zeroLineEdit.setFocus()
+                    else:
+                        self.i_posLineEdit.setFocus()
+                else:
+                    self.r_posLineEdit.setFocus()
+            else:
+                self.fasesLineEdit.setFocus()
+        else:
+            self.nomeLineEdit.setFocus()
+
+    def en_dis_button(self):
+
+        if self.nomeLineEdit.text() == "":
+            print self.buttonBox.buttons()
+            self.buttonBox.buttons()[0].setEnabled(False)
+        else:
+            self.buttonBox.buttons()[0].setEnabled(True)
+        if self.nomeLineEdit.placeholderText() != "":
+            self.buttonBox.buttons()[0].setEnabled(True)
+
     def retranslateUi(self, Propriedades):
         #Tradução dos nomes dados aos objetos para os nomes gráficos do programa
         Propriedades.setWindowTitle(QtGui.QApplication.translate("Propriedades", "Barra - Propriedades", None, QtGui.QApplication.UnicodeUTF8))
         self.nomeLabel.setText(QtGui.QApplication.translate("Propriedades", "Nome:", None, QtGui.QApplication.UnicodeUTF8))
         self.fasesLabel.setText(QtGui.QApplication.translate("Propriedades", "Fases:", None, QtGui.QApplication.UnicodeUTF8))
-        self.r_posLabel.setText(QtGui.QApplication.translate("Dialog", "Impedância (Sequência Positiva):", None, QtGui.QApplication.UnicodeUTF8))
-        self.i_posLabel.setText(QtGui.QApplication.translate("Dialog", "+", None, QtGui.QApplication.UnicodeUTF8))
-        self.r_zeroLabel.setText(QtGui.QApplication.translate("Dialog", "Impedância (Sequência Zero):", None, QtGui.QApplication.UnicodeUTF8))
-        self.i_zeroLabel.setText(QtGui.QApplication.translate("Dialog", "+", None, QtGui.QApplication.UnicodeUTF8))
-
+        self.impedanciaPositiva.setText(QtGui.QApplication.translate("Dialog", "Impedância - Sequência Positiva (pu):", None, QtGui.QApplication.UnicodeUTF8))
+        self.sinalMaisLabel.setText(QtGui.QApplication.translate("Dialog", "+", None, QtGui.QApplication.UnicodeUTF8))
+        self.jLabel.setText(QtGui.QApplication.translate("Dialog", "j", None, QtGui.QApplication.UnicodeUTF8))
+        self.impedanciaZero.setText(QtGui.QApplication.translate("Dialog", "Impedância - Sequência Zero (pu):", None, QtGui.QApplication.UnicodeUTF8))
+        self.sinalMais2Label.setText(QtGui.QApplication.translate("Dialog", "+", None, QtGui.QApplication.UnicodeUTF8))
+        self.j2Label.setText(QtGui.QApplication.translate("Dialog", "j", None, QtGui.QApplication.UnicodeUTF8))
+        
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     BarraDialog = BarraDialog()
